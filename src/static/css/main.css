@@ -1,0 +1,14 @@
+#contents {
+    display: flex;
+    flex-flow: column nowrap;
+    width: 100%;
+    padding: 8px;
+    margin: auto;
+    box-sizing: border-box;
+    margin-top: 64px;
+}
+
+noscript {
+    font-weight: bold;
+    color: red;
+}
