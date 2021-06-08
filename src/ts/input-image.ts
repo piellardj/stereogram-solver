@@ -65,6 +65,8 @@ class InputImage {
             this.presetSelect = buildSelect([
                 { value: "thumbsup.jpg", label: "Thumbs up" },
                 { value: "planet.jpg", label: "Planet" },
+                { value: "dolphins.jpg", label: "Dolphins" },
+                { value: "atomium.jpg", label: "Atomium" },
             ]);
             this.presetSelect.id = "preset-select";
             this.presetSelect.addEventListener("change", () => { this.onPresetChange(); });
