@@ -37,8 +37,11 @@ class Visualization {
         if (this._image) {
             this.canvasContext.globalCompositeOperation = "source-over";
             this.canvasContext.drawImage(this._image, 0, 0, this.canvasElement.width, this.canvasElement.height);
-            this.canvasContext.globalCompositeOperation = "difference";
-            this.canvasContext.drawImage(this._image, this._displacement, 0, this.canvasElement.width, this.canvasElement.height);
+
+            if (this._displacement > 0) {
+                this.canvasContext.globalCompositeOperation = "difference";
+                this.canvasContext.drawImage(this._image, this._displacement, 0, this.canvasElement.width, this.canvasElement.height);
+            }
         }
     }
 
