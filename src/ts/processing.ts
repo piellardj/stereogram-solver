@@ -42,7 +42,7 @@ class Processing {
     }
 
     public detectBasePeriod(): number {
-        const MAX_TESTED_LINES_COUNT = 100;
+        const MAX_TESTED_LINES_COUNT = 50;
         const computeTestedLines = (): number[] => {
             const result: number[] = [];
             const delta = (this.imageData.height < MAX_TESTED_LINES_COUNT) ? 1 : (this.imageData.height / MAX_TESTED_LINES_COUNT);
@@ -79,21 +79,43 @@ class Processing {
             differences.push(averageDifference);
         }
 
+        const bestDisplacement = this.computeBestDisplacement(differences);
+        // console.log(`${bestDisplacement}\t:\t${this.imageData.width / bestDisplacement}`);
+        return bestDisplacement;
+    }
+
+    private computeBestDisplacement(differences: number[]): number {
         // when reaching the correct delta, on most stereograms the total difference is at its lowest, and goes right up just after
         // so try to detect this point
-        let bestCandidate = 1;
-        let bestGradient = -1;
+        let highestGradientIndex = 1;
+        let highestGradient = -1;
         for (let i = 2; i < differences.length - 1; i++) {
-            const previousSlope = differences[i] - differences[i - 1];
-            const slope = differences[i + 1] - differences[i];
+            const gradient = differences[i + 1] - differences[i];
 
-            console.log(`Displacement: ${i}; previous: ${previousSlope}; current: ${slope}`);
-            if (slope > bestGradient) {
-                bestCandidate = i;
-                bestGradient = slope;
+            // console.log(`${i}: ${gradient}`);
+            if (gradient > highestGradient) {
+                highestGradientIndex = i;
+                highestGradient = gradient;
             }
         }
-        return bestCandidate;
+
+        let lowestGradientIndex = 1;
+        let lowestGradient = 99999999;
+        for (let i = 2; i < highestGradientIndex; i++) {
+            const gradient = differences[i + 1] - differences[i];
+
+            if (gradient < lowestGradient) {
+                lowestGradientIndex = i;
+                lowestGradient = gradient;
+            }
+        }
+
+        if (lowestGradient >= 0 || lowestGradientIndex < highestGradientIndex - 2) { // data is incoherent, trust the highest gradient
+            return highestGradientIndex;
+        } else { // data is consistent, try to find a precise value
+            const x = Math.abs(lowestGradient) / (Math.abs(lowestGradient) + highestGradient);
+            return x * lowestGradientIndex + (1 - x) * highestGradientIndex;
+        }
     }
 
     private process(): void {
