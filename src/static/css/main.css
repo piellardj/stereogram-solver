@@ -1,14 +1,47 @@
 #contents {
     display: flex;
     flex-flow: column nowrap;
+    align-items: center;
     width: 100%;
     padding: 8px;
     margin: auto;
     box-sizing: border-box;
-    margin-top: 64px;
+    text-align: left;
 }
 
-noscript {
+.contents-section {
+    display: flex;
+    flex-flow: column;
+}
+
+.contents-section + .contents-section {
+    margin-top: 32px;
+    text-align: left;
+}
+
+#input-section {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: 10px;
+}
+
+@media screen and (max-width: 720px) {
+    #input-section {
+        grid-template-columns: repeat(1, 1fr);
+    }
+}
+
+#input-section .input-row {
+    display: contents;
+}
+
+#errors {
     font-weight: bold;
     color: red;
+}
+
+input[type=range].full-width-range {
+    margin: 4px 0;
+    padding: 0;
+    width: 100%;
 }

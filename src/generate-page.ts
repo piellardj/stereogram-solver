@@ -17,7 +17,7 @@ const data = {
     cssFiles: [
         "css/main.css"
     ],
-    body: "<noscript>You need to enable Javascript to run this experiment.</noscript>\n<div id=\"contents\"></div>"
+    body: "<div id=\"contents\">\n<div id=\"errors\" class=\"contents-section\"><noscript>You need to enable Javascript to run this experiment.</noscript></div></div>"
 };
 
 const SRC_DIR = path.resolve(__dirname);
