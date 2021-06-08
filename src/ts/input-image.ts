@@ -63,6 +63,7 @@ class InputImage {
 
         {
             this.presetSelect = buildSelect([
+                { value: "shark.jpg", label: "Shark" },
                 { value: "thumbsup.jpg", label: "Thumbs up" },
                 { value: "planet.jpg", label: "Planet" },
                 { value: "dolphins.jpg", label: "Dolphins" },
