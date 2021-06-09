@@ -1,7 +1,7 @@
 import "./page-interface-generated.ts"
 
 
-function setFailedToLoadError(url: string): void {
+function setFailedToLoadError(url: string | null): void {
     const id = "IMAGE_FAILED_TO_LOAD";
 
     let div = document.getElementById(id);
@@ -12,7 +12,12 @@ function setFailedToLoadError(url: string): void {
         errorsSection.appendChild(div);
     }
 
-    div.textContent = `Failed to load image from url: '${url}'.`;
+    if (url === null) {
+        div.style.display = "none";
+    } else {
+        div.style.display = "";
+        div.textContent = `Failed to load image from url: '${url}'.`;
+    }
 }
 
 type Observer = () => unknown;
@@ -168,6 +173,8 @@ class InputImage {
     private loadImage(url: string): void {
         const startingImage = new Image();
         startingImage.addEventListener("load", () => {
+            setFailedToLoadError(null);
+
             this.loadedImage = startingImage;
             this.callObservers();
         });
