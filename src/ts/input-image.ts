@@ -145,7 +145,7 @@ class InputImage {
             inputContainer.appendChild(this.urlLoadButton);
 
             this.urlLoadButton.addEventListener("click", () => {
-                this.loadImage(this.urlInput.value);
+                this.loadCrossOriginImage(this.urlInput.value);
                 this.presetSelect.value = SELECT_DEFAULT_VALUE;
                 this.uploadFileButton.value = "";
             })
@@ -182,6 +182,32 @@ class InputImage {
             setFailedToLoadError(url);
         });
         startingImage.src = url;
+    }
+
+    private loadCrossOriginImage(url: string): void {
+        // Loading and manipulating a cross origin image is tricky
+        // because canvas2d APIs such as getImageData() are blocked when the canvas is tainted by a cross origin image
+
+        // use XMLHttpRequest and not Image directly because I ant to set custom headers
+        const xhr = new XMLHttpRequest();
+        xhr.addEventListener("load", () => {
+            const reader = new FileReader();
+            reader.addEventListener("loadend", () => {
+                // pass a data url because it does not contain information that the data is cross-origin
+                // so the canvas won't be tainted
+                this.loadImage(reader.result.toString());
+            });
+            reader.readAsDataURL(xhr.response);
+        });
+
+        // use a proxy that allows all cross origin
+        xhr.open('GET', `https://cors-anywhere.herokuapp.com/${url}`);
+        // set this header because the proxy requires it
+        xhr.setRequestHeader("X-Request-URL", "null");
+
+        // request data in the data-url form so that it can be later parsed as an image
+        xhr.responseType = 'blob';
+        xhr.send();
     }
 
     private callObservers(): void {

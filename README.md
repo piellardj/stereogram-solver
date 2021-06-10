@@ -66,3 +66,19 @@ Here is a comparison between a source depth map, the corresponding stereogram, a
         <i>Depth map rebuilt by analyzing the Magic Eye image.</i>
     </p>
 </div>
+
+## CORS issues
+For this project I encountered a Cross-origin resource sharing (CORS) issue I did not expect.
+
+This website gives the user the possibility to load an image from any URL. Most of the time, the URL is from another website, so the image is cross-origin. As described [here](https://developer.mozilla.org/fr/docs/Web/HTTP/CORS), cross-origin requests have a few quirks. The base idea is that cross-origin resources hosted on a domain A can only be read from a domain B if B declared by A as an allowed domain. The domain A declares the allowed domains in an allow-list provided in the `Access-Control-Allow-Origin` response header. If not allowed, queries from B to A are blocked; for instance, any unauthorized cross-origin `XMLHttpRequest` fails.
+
+In this case, I discovered the browser allows even a cross-origin image to be loaded if I use directly an `Image` object in javascript. It can even be displayed in the canvas2D with the `CanvasRenderingContext2D.drawImage()` API. However the browser prevents the image data from being accessed: using the `CanvasRenderingContext2D.getImageData()` API fails, and the browser throws an exception:
+`Uncaught DOMException: Failed to execute 'getImageData' on 'CanvasRenderingContext2D': The canvas has been tainted by cross-origin data.` This means that a cross-origin image can only be displayed: drawing it to a canvas makes the canvas is tainted (= unsafe), and then any attempt to read back the canvas data are blocked for security reasons.
+
+I did not find a way to allow the reading a tainted canvas. This means the solution is to prevent the canvas from being tainted in the first place.
+
+In order to do this, I have to make sure the manipulation of the cross-origin image is allowed on my domain (piellardj.github.io). What I need is my domain to be in the `Access-Control-Allow-Origin` response header. However, I do not control which domains are allowed by the foreign domains hosting the cross-origin image.
+
+The trick is to make the browser believe the image is allowed on my domain by using of a CORS proxy. The proper way to do it would have been to create my own on my domain piellardj.github.io, however it requires server code and Github Pages does not support this.
+
+This is why I have to rely on an external proxy. Here is how it works: I provide the URL of the image to the proxy, the proxy fetches it for me, then adds a `Access-Control-Allow-Origin=*` header to the response, then sends the response to the browser. This way, the browser believes my domain is allowed, so the canvas is not tainted, and I can read back its pixel data. A quick search shows there are many CORS proxy available. I chose https://cors-anywhere.herokuapp.com/ and it works great.
