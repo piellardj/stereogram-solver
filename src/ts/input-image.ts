@@ -151,7 +151,7 @@ class InputImage {
             })
 
             urlInputContainer.appendChild(inputContainer);
-            this.container.appendChild(urlInputContainer);
+            // this.container.appendChild(urlInputContainer);
         }
 
         this.onPresetChange();
