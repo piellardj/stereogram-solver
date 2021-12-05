@@ -1,6 +1,9 @@
 {
   "name": "stereogram-solver",
   "homepage": "https://piellardj.github.io/stereogram-solver",
+  "author": "Jérémie PIELLARD <jeremie.piellard@gmail.com> (https://github.com/piellardj)",
+  "repository": "github:piellardj/stereogram-solver",
+  "private": true,
   "scripts": {
     "pre-commit": "npm run rebuild && npm run lint",
     "http-server": "http-server ./docs -p 8080",
@@ -11,8 +14,6 @@
     "rebuild": "npm run clean && npm run build",
     "webpack": "webpack --config src/config/webpack.config.js"
   },
-  "author": "“Jérémie PIELLARD <jeremie.piellard@gmail.com> (https://github.com/piellardj)",
-  "repository": "github:piellardj/stereogram-solver",
   "devDependencies": {
     "@types/fs-extra": "^9.0.11",
     "@types/node": "^15.12.1",
