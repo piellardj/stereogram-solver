@@ -14,9 +14,6 @@
     "rebuild": "npm run clean && npm run build",
     "webpack": "webpack --config src/config/webpack.config.js"
   },
-  "engine": {
-    "node": ">=16.13.0"
-  },
   "devDependencies": {
     "@types/fs-extra": "^9.0.13",
     "@types/node": "^16.11.11",
