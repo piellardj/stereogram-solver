@@ -1,4 +1,4 @@
-import "./page-interface-generated.ts"
+import "./page-interface-generated"
 
 
 function setFailedToLoadError(url: string | null): void {

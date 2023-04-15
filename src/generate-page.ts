@@ -17,7 +17,7 @@ const data = {
     scriptFiles: [
         "script/main.min.js"
     ],
-    cssFiles: [
+    styleFiles: [
         "css/main.css"
     ],
     body: "<div id=\"contents\">\n<div id=\"errors\" class=\"contents-section\"><noscript>You need to enable Javascript to run this experiment.</noscript></div></div>"
