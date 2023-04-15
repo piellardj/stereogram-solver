@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="description" content="Readme page of my project 'Stereogram solver'. Stereogram (aka Magic Eye) solver for those who can't see them" />
+    <title>Stereogram solver - Explanations</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="icon" type="image/png" href="favicon-16x16.png" sizes="16x16">
+    <link rel="icon" type="image/png" href="favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="favicon-96x96.png" sizes="96x96">
+    <link rel="stylesheet" type="text/css" href="css/page.css?v=2023-04-15T20%3A42%3A57.262Z">
+  </head>
+
+  <body>
+    <header>
+      <a class="logo logo-animate-fill" href="https://piellardj.github.io/stereogram-solver/" id="seep-live-button" title="Live project" aria-label="Live project">
+        <svg class="logo-icon" xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
+          <g stroke-width="2">
+            <path fill="none" stroke-linejoin="round" d="M24,20v24L46,32z" />
+        </svg>
+      </a>
+    </header>
+    <main>
+      <div class="contents">
+        <h1 id="stereogramsolver">stereogram-solver</h1>
+        <p>An autostereogram (also known as Magic Eye) is a 2D image designed to create the illusion of 3D. In each image, there is a 3D object that can only be viewed by looking at the image a certain way, as if the screen was transparent and you looked at the wall behind it.</p>
+        <p>Correctly viewing a Magic Eye definitely takes some practice, and some people are completely unable to see them. This website is a tool to reveal the 3D scene hidden in a stereogram by revealing its silhouette. It works for most of autosterograms, especially if they have a simple plane as background.</p>
+        <p>See it live <a href="https://piellardj.github.io/stereogram-solver/">here</a>.</p>
+        <p>See my Magic Eye generator <a href="https://piellardj.github.io/stereogram-webgl/">here</a>.</p>
+        <h2 id="preview">Preview</h2>
+        <p><img src="https://github.com/piellardj/stereogram-solver/raw/main/src/readme/shark.jpg" alt="Shark" /></p>
+        <p><img src="https://github.com/piellardj/stereogram-solver/raw/main/src/readme/thumbsup.jpg" alt="Thumbs up" /></p>
+        <p><img src="https://github.com/piellardj/stereogram-solver/raw/main/src/readme/planet.jpg" alt="Planet" /></p>
+        <h2 id="algorithm">Algorithm</h2>
+        <p>As described in my Magic Eye generator project, a stereogram is all about horizontal repetition of a certain pattern, and the repetition frequency depends on the local depth of the scene.</p>
+        <p>This means that to reconstruct a depth map from a stereogram, we can first try to determine the frequency, and then we rebuild the depth map from it. In this project, I simply compute the difference between the image and a shifted version of itself. This way, when I hit the right period, the difference is very small and the pixels appear black. This can very easily be visualized by slowly moving the slider that controls the size of the lateral shift.</p>
+        <div style="text-align:center">
+          <img alt="Depth progression" src="https://github.com/piellardj/stereogram-solver/raw/main/src/readme/depth-progression.jpg" />
+          <p>
+            <i>By varying the displacement, one can clearly see the 3D at different depths.</i>
+          </p>
+        </div>
+        <p>In theory, I could use this technique to automatically rebuild a full depth map of the image, however I did not achieve great result with it. My guess is that I would need to apply a kind of blur to the source image beforehand, in order to remove artifacts. This is why I restricted my self to building only a binary version of the depth map: I determine what is in the background (black) and the rest of the scene is only shown as a colored silhouette. Of course, this only works for stereograms that have a background plane. For stereograms that don't, for instance a ripple that takes the whole image, this technique is not very effective. Moving the slider manually can still give an idea of the scene.</p>
+        <p>To determine the period of the background plane, I compute the global difference for varying displacements, and choose the best one based on its value and its neighbours. Here is an example of curve showing how the difference varies with displacement:</p>
+        <div style="text-align:center">
+          <img alt="Depth progression" src="https://github.com/piellardj/stereogram-solver/raw/main/src/readme/graph.png" />
+          <p>
+            <i>The period of repetition for the background for the shark image is clearly visible around 140px.</i>
+          </p>
+        </div>
+        <h2 id="results">Results</h2>
+        <p>I obtained surprisingly good results with this technique. It is also quite resistant to image alterations, such as jpeg artifacts, blur, black and white transformation, etc.</p>
+        <p>Here is a comparison between a source depth map, the corresponding stereogram, and the reconstruction of the depth map with this technique:</p>
+        <div style="text-align:center">
+          <img alt="Source depth map" src="https://github.com/piellardj/stereogram-solver/raw/main/src/readme/results_source.png" />
+          <p>
+            <i>Source depth map.</i>
+          </p>
+        </div>
+        <div style="text-align:center">
+          <img alt="Corresponding stereogram" src="https://github.com/piellardj/stereogram-solver/raw/main/src/readme/results_image.jpg" />
+          <p>
+            <i>Corresponding stereogram</i>
+          </p>
+        </div>
+        <div style="text-align:center">
+          <img alt="Rebuilt depth map" src="https://github.com/piellardj/stereogram-solver/raw/main/src/readme/results_rebuilt.jpg" />
+          <p>
+            <i>Depth map rebuilt by analyzing the Magic Eye image.</i>
+          </p>
+        </div>
+        <h2 id="corsissues">CORS issues</h2>
+        <p>For this project I encountered a Cross-origin resource sharing (CORS) issue I did not expect.</p>
+        <p>Intially, I wanted my to give the user the possibility to load an image from any URL. Most of the time, the URL is from another website, so the image is cross-origin. As described <a href="https://developer.mozilla.org/fr/docs/Web/HTTP/CORS">here</a>, cross-origin requests have a few quirks. The base idea is that cross-origin resources hosted on a domain A can only be read from a domain B if B declared by A as an allowed domain. The domain A declares the allowed domains in an allow-list provided in the <code>Access-Control-Allow-Origin</code> response header. If not allowed, queries from B to A are blocked; for instance, any unauthorized cross-origin <code>XMLHttpRequest</code> fails.</p>
+        <p>In this case, I discovered the browser allows even a cross-origin image to be loaded if I use directly an <code>Image</code> object in javascript. It can even be displayed in the canvas2D with the <code>CanvasRenderingContext2D.drawImage()</code> API. However the browser prevents the image data from being accessed: using the <code>CanvasRenderingContext2D.getImageData()</code> API fails, and the browser throws an exception:
+          <code>Uncaught DOMException: Failed to execute 'getImageData' on 'CanvasRenderingContext2D': The canvas has been tainted by cross-origin data.</code> This means that a cross-origin image can only be displayed: drawing it to a canvas makes the canvas is tainted (= unsafe), and then any attempt to read back the canvas data are blocked for security reasons.
+        </p>
+        <p>I did not find a way to allow the reading a tainted canvas. This means the solution is to prevent the canvas from being tainted in the first place.</p>
+        <p>In order to do this, I have to make sure the manipulation of the cross-origin image is allowed on my domain (piellardj.github.io). What I need is my domain to be in the <code>Access-Control-Allow-Origin</code> response header. However, I do not control which domains are allowed by the foreign domains hosting the cross-origin image.</p>
+        <p>The trick is to make the browser believe the image is allowed on my domain by using of a CORS proxy. The proper way to do it would have been to create my own proxy on my domain piellardj.github.io, however it requires server code and Github Pages does not support this.</p>
+        <p>This is why I have to rely on an external proxy. Here is how it works: I provide the URL of the image to the proxy, the proxy fetches it for me, then adds a <code>Access-Control-Allow-Origin=*</code> header to the response, then sends the response to the browser. This way, the browser believes my domain is allowed, so the canvas is not tainted, and I can read back its pixel data. A quick search shows there are many CORS proxy available. Unfortunately, the free CORS proxies I found have a usage limit (and might be unsafe), so I disabled the possibility to load an image from an URL.</p>
+      </div>
+    </main>
+
+    <footer>
+      <div class="badge-shelf">
+        <a class="badge" href="mailto:jeremie.piellard@gmail.com" title="Email">
+          <svg xmlns="http://www.w3.org/2000/svg" width="32px" height="32px" viewBox="0 0 512 512">
+            <path d="M512 85V448H0V85l256 224L512 85zM488 64H24L256 267 488 64z" />
+          </svg>
+        </a>
+
+        <a class="badge" href="https://github.com/piellardj" title="GitHub">
+          <svg xmlns="http://www.w3.org/2000/svg" width="32px" height="32px" viewBox="0 0 1024 1024">
+            <path d="M512 0C229 0 0 229 0 512c0 226 147 418 350 486 26 5 35-11 35-25 0-12 0-53-1-95C242 909 212 818 212 818c-23-59-57-75-57-75-47-32 4-31 4-31 51 4 78 53 78 53 46 78 120 56 149 43 5-33 18-56 33-68C305 725 185 682 185 485c0-56 20-102 53-137-5-13-23-65 5-136 0 0 43-14 141 53 41-11 85-17 128-17 44 0 87 6 128 17 98-66 141-52 141-52 28 71 10 123 5 136 33 36 53 81 53 137 0 197-120 240-234 253 18 16 35 47 35 95 0 68-1 124-1 141 0 14 9 30 35 25C877 930 1024 738 1024 512 1024 229 795 0 512 0z" />
+          </svg>
+        </a>
+
+        <a class="badge" href="https://www.linkedin.com/in/jeremie-piellard/" title="LinkedIn">
+          <svg xmlns="http://www.w3.org/2000/svg" width="32px" height="32px" viewBox="0 0 512 512">
+            <path d="M30 177l93-1v304l-93 1v-304z" />
+            <path d="M200 177l89-1v39l0 11c26-26 53-45 97-45 51 0 100 21 100 91v208l-90 1v-159c0-35-9-58-51-58-37 0-52 7-52 55v160l-92 1v-304z" />
+            <path d="M128 81c0 28-23 51-51 51s-51-23-51-51c0-28 23-51 51-51 28 0 51 23 51 51z" />
+          </svg>
+        </a>
+      </div>
+    </footer>
+  </body>
+
+</html>

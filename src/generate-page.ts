@@ -11,6 +11,10 @@ const data = {
         "Correctly viewing a Magic Eye definitely takes some practice, and some people are completely unable to see them. This website is a tool to reveal the 3D scene hidden in a stereogram by revealing its silhouette. It works for most of autosterograms, especially if they have a simple plane as background."
     ],
     githubProjectName: "stereogram-solver",
+    readme: {
+        filepath: path.join(__dirname, "..", "README.md"),
+        branchName: "main"
+    },
     additionalLinks: [
         { href: "https://piellardj.github.io/stereogram-webgl/", text: "See my Magic Eye generator here." },
     ],
