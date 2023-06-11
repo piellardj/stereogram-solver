@@ -7,6 +7,8 @@ See it live [here](https://piellardj.github.io/stereogram-solver/).
 
 See my Magic Eye generator [here](https://piellardj.github.io/stereogram-webgl/).
 
+[![Donate](https://raw.githubusercontent.com/piellardj/piellardj.github.io/master/images/readme/donate-paypal.svg)](https://www.paypal.com/donate/?hosted_button_id=AF7H7GEJTL95E)
+
 ## Preview
 
 ![Shark](src/readme/shark.jpg)
