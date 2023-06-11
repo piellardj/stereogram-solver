@@ -19,16 +19,16 @@
   },
   "devDependencies": {
     "@types/fs-extra": "^11.0.1",
-    "@types/node": "^18.15.11",
+    "@types/node": "^20.3.0",
     "fs-extra": "^11.1.1",
     "http-server": "^14.1.1",
     "shx": "^0.3.4",
-    "ts-loader": "^9.4.2",
+    "ts-loader": "^9.4.3",
     "ts-node": "^10.9.1",
     "tslint": "^6.1.3",
-    "typescript": "^5.0.4",
-    "webpack": "^5.79.0",
-    "webpack-cli": "^5.0.1",
+    "typescript": "^5.1.3",
+    "webpack": "^5.86.0",
+    "webpack-cli": "^5.1.4",
     "webpage-templates": "github:piellardj/webpage-templates"
   }
 }
