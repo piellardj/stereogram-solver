@@ -101,7 +101,7 @@ class InputImage {
             fileInputContainer.appendChild(label);
 
             this.uploadFileButton.type = "file";
-            this.uploadFileButton.accept = ".png,.jpg,.bmp,.webp";
+            this.uploadFileButton.accept = ".png,.jpg,.jpeg,.bmp,.webp";
             this.uploadFileButton.addEventListener("change", (event: Event) => {
                 event.stopPropagation();
                 const files = this.uploadFileButton.files;
